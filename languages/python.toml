@@ -1,0 +1,153 @@
+name = "python"
+extensions = [".py", ".pyw", ".pyi"]
+delimiters = [" ", "\t", "(", ")", "{", "}", "[", "]", ";", ",", ".", "<", ">", "+", "-", "*", "/", "%", "&", "|", "^", "!", "~", "=", "?", ":", "@"]
+back_delimiters = []
+ignore_case = false
+
+[[keywords]]
+name = "keyword"
+keywords = [
+    "False", "None", "True", "and", "as", "assert", "async", "await", "break",
+    "class", "continue", "def", "del", "elif", "else", "except", "finally",
+    "for", "from", "global", "if", "import", "in", "is", "lambda", "nonlocal",
+    "not", "or", "pass", "raise", "return", "try", "while", "with", "yield"
+]
+
+[[keywords]]
+name = "builtin"
+keywords = [
+    "abs", "all", "any", "bin", "bool", "bytearray", "bytes", "callable", "chr",
+    "classmethod", "compile", "complex", "delattr", "dict", "dir", "divmod",
+    "enumerate", "eval", "exec", "filter", "float", "format", "frozenset",
+    "getattr", "globals", "hasattr", "hash", "help", "hex", "id", "input", "int",
+    "isinstance", "issubclass", "iter", "len", "list", "locals", "map", "max",
+    "memoryview", "min", "next", "object", "oct", "open", "ord", "pow", "print",
+    "property", "range", "repr", "reversed", "round", "set", "setattr", "slice",
+    "sorted", "staticmethod", "str", "sum", "super", "tuple", "type", "vars", "zip"
+]
+
+[[keywords]]
+name = "decorator"
+keywords = [
+    "property", "staticmethod", "classmethod", "abstractmethod", "abstractproperty",
+    "abstractclassmethod", "abstractstaticmethod", "dataclass", "attrs", "wraps"
+]
+
+[[single_line_blocks]]
+name = "comment"
+start = "#"
+end = ""
+
+[[single_line_blocks]]
+name = "string"
+start = "\""
+end = "\""
+escape = { escape_string = "\\", items = ["\\\"", "\\\\"] }
+
+[[single_line_blocks]]
+name = "string"
+start = "'"
+end = "'"
+escape = { escape_string = "\\", items = ["\\'", "\\\\"] }
+
+[[single_line_blocks]]
+name = "f-string"
+start = "f\""
+end = "\""
+escape = { escape_string = "\\", items = ["\\\"", "\\\\"] }
+
+[[single_line_blocks]]
+name = "f-string"
+start = "f'"
+end = "'"
+escape = { escape_string = "\\", items = ["\\'", "\\\\"] }
+
+[[single_line_blocks]]
+name = "raw string"
+start = "r\""
+end = "\""
+
+[[single_line_blocks]]
+name = "raw string"
+start = "r'"
+end = "'"
+
+[[single_line_blocks]]
+name = "byte string"
+start = "b\""
+end = "\""
+escape = { escape_string = "\\", items = ["\\\"", "\\\\"] }
+
+[[single_line_blocks]]
+name = "byte string"
+start = "b'"
+end = "'"
+escape = { escape_string = "\\", items = ["\\'", "\\\\"] }
+
+[[multi_line_blocks]]
+name = "multi-line string"
+start = "\"\"\""
+end = "\"\"\""
+
+[[multi_line_blocks]]
+name = "multi-line string"
+start = "'''"
+end = "'''"
+
+[[multi_line_blocks]]
+name = "multi-line f-string"
+start = "f\"\"\""
+end = "\"\"\""
+
+[[multi_line_blocks]]
+name = "multi-line f-string"
+start = "f'''"
+end = "'''"
+
+[[multi_line_blocks]]
+name = "multi-line raw string"
+start = "r\"\"\""
+end = "\"\"\""
+
+[[multi_line_blocks]]
+name = "multi-line raw string"
+start = "r'''"
+end = "'''"
+
+[[multi_line_blocks]]
+name = "multi-line byte string"
+start = "b\"\"\""
+end = "\"\"\""
+
+[[multi_line_blocks]]
+name = "multi-line byte string"
+start = "b'''"
+end = "'''"
+
+[[tokens]]
+name = "number"
+pattern = "\\b\\d+\\.?\\d*([eE][+-]?\\d+)?[jJ]?\\b"
+
+[[tokens]]
+name = "hex number"
+pattern = "\\b0[xX][0-9a-fA-F]+\\b"
+
+[[tokens]]
+name = "octal number"
+pattern = "\\b0[oO][0-7]+\\b"
+
+[[tokens]]
+name = "binary number"
+pattern = "\\b0[bB][01]+\\b"
+
+[[tokens]]
+name = "decorator"
+pattern = "@\\w+(\\.\\w+)*"
+
+[[tokens]]
+name = "type hint"
+pattern = ":\\s*\\w+(\\[.*?\\])?"
+
+[[tokens]]
+name = "arrow"
+pattern = "->\\s*\\w+(\\[.*?\\])?"
