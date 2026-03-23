@@ -1,9 +1,9 @@
 //! Theme definitions for syntax highlighting.
 
+use crate::error::Result;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::Path;
-use crate::error::Result;
 
 /// Color representation (RGB hex format like "#FF0000" for red).
 pub type Color = String;
@@ -13,15 +13,15 @@ pub type Color = String;
 pub struct Theme {
     /// Theme name (e.g., "monokai", "solarized-dark").
     pub name: String,
-    
+
     /// Optional description.
     #[serde(default)]
     pub description: String,
-    
+
     /// General colors.
     #[serde(default)]
     pub colors: ThemeColors,
-    
+
     /// Token type to color mapping.
     #[serde(default)]
     pub token_colors: HashMap<String, Color>,
@@ -33,19 +33,19 @@ pub struct ThemeColors {
     /// Background color.
     #[serde(default = "default_background")]
     pub background: Color,
-    
+
     /// Default foreground (text) color.
     #[serde(default = "default_foreground")]
     pub foreground: Color,
-    
+
     /// Line number color.
     #[serde(default = "default_line_number")]
     pub line_number: Color,
-    
+
     /// Selection highlight color.
     #[serde(default = "default_selection")]
     pub selection: Color,
-    
+
     /// Cursor color.
     #[serde(default = "default_cursor")]
     pub cursor: Color,
@@ -90,12 +90,12 @@ impl Theme {
         let theme: Theme = toml::from_str(&content)?;
         Ok(theme)
     }
-    
+
     /// Get color for a token type.
     pub fn get_color(&self, token_type: &str) -> Option<&Color> {
         self.token_colors.get(token_type)
     }
-    
+
     /// Get color for a token type with fallback to default.
     pub fn get_color_or_default(&self, token_type: &str) -> &Color {
         self.token_colors
@@ -103,7 +103,7 @@ impl Theme {
             .or_else(|| self.token_colors.get("default"))
             .unwrap_or(&self.colors.foreground)
     }
-    
+
     /// Create a default light theme.
     pub fn light() -> Self {
         let mut token_colors = HashMap::new();
@@ -116,7 +116,7 @@ impl Theme {
         token_colors.insert("operator".to_string(), "#000000".to_string());
         token_colors.insert("punctuation".to_string(), "#000000".to_string());
         token_colors.insert("default".to_string(), "#000000".to_string());
-        
+
         Self {
             name: "light".to_string(),
             description: "Default light theme".to_string(),
@@ -124,7 +124,7 @@ impl Theme {
             token_colors,
         }
     }
-    
+
     /// Create a default dark theme.
     pub fn dark() -> Self {
         let mut token_colors = HashMap::new();
@@ -137,7 +137,7 @@ impl Theme {
         token_colors.insert("operator".to_string(), "#D4D4D4".to_string());
         token_colors.insert("punctuation".to_string(), "#D4D4D4".to_string());
         token_colors.insert("default".to_string(), "#D4D4D4".to_string());
-        
+
         Self {
             name: "dark".to_string(),
             description: "Default dark theme".to_string(),
@@ -151,7 +151,7 @@ impl Theme {
             token_colors,
         }
     }
-    
+
     /// Create a Monokai theme.
     pub fn monokai() -> Self {
         let mut token_colors = HashMap::new();
@@ -164,7 +164,7 @@ impl Theme {
         token_colors.insert("operator".to_string(), "#F92672".to_string());
         token_colors.insert("punctuation".to_string(), "#F8F8F2".to_string());
         token_colors.insert("default".to_string(), "#F8F8F2".to_string());
-        
+
         Self {
             name: "monokai".to_string(),
             description: "Monokai color theme".to_string(),
@@ -189,40 +189,40 @@ impl ThemeManager {
     /// Create a new theme manager.
     pub fn new() -> Self {
         let mut themes = HashMap::new();
-        
+
         // Add built-in themes
         themes.insert("light".to_string(), Theme::light());
         themes.insert("dark".to_string(), Theme::dark());
         themes.insert("monokai".to_string(), Theme::monokai());
-        
+
         Self { themes }
     }
-    
+
     /// Load a theme from a TOML file.
     pub fn load_theme(&mut self, path: &Path) -> Result<()> {
         let theme = Theme::load(path)?;
         self.themes.insert(theme.name.clone(), theme);
         Ok(())
     }
-    
+
     /// Load all themes from a directory.
     pub fn load_themes_from_dir(&mut self, dir: &Path) -> Result<()> {
         for entry in std::fs::read_dir(dir)? {
             let entry = entry?;
             let path = entry.path();
-            
+
             if path.extension().and_then(|s| s.to_str()) == Some("toml") {
                 self.load_theme(&path)?;
             }
         }
         Ok(())
     }
-    
+
     /// Get a theme by name.
     pub fn get_theme(&self, name: &str) -> Option<&Theme> {
         self.themes.get(name)
     }
-    
+
     /// Get all available theme names.
     pub fn available_themes(&self) -> Vec<&String> {
         self.themes.keys().collect()

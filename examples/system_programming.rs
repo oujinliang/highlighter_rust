@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 use std::fs::{self, File};
-use std::io::{self, BufRead, BufReader, Write};
+use std::io::{self, BufRead, BufReader, Read, Write};
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -227,27 +227,28 @@ impl MemoryManager {
 /// Error handling examples
 struct ErrorHandler;
 
+/// Custom error type
+#[derive(Debug)]
+enum AppError {
+    IoError(io::Error),
+    ParseError(std::num::ParseIntError),
+    CustomError(String),
+}
+
+impl From<io::Error> for AppError {
+    fn from(error: io::Error) -> Self {
+        AppError::IoError(error)
+    }
+}
+
+impl From<std::num::ParseIntError> for AppError {
+    fn from(error: std::num::ParseIntError) -> Self {
+        AppError::ParseError(error)
+    }
+}
+
 impl ErrorHandler {
-    /// Custom error type
-    #[derive(Debug)]
-    enum AppError {
-        IoError(io::Error),
-        ParseError(std::num::ParseIntError),
-        CustomError(String),
-    }
-    
-    impl From<io::Error> for AppError {
-        fn from(error: io::Error) -> Self {
-            AppError::IoError(error)
-        }
-    }
-    
-    impl From<std::num::ParseIntError> for AppError {
-        fn from(error: std::num::ParseIntError) -> Self {
-            AppError::ParseError(error)
-        }
-    }
-    
+
     /// Function that returns Result
     fn read_and_parse_file<P: AsRef<Path>>(path: P) -> Result<i32, AppError> {
         let content = fs::read_to_string(path)?;

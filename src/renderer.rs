@@ -1,7 +1,7 @@
 //! Renderers for syntax-highlighted code.
 
 use crate::parser::TextLineInfo;
-use crate::theme::{Theme, Color};
+use crate::theme::{Color, Theme};
 
 /// HTML renderer for syntax-highlighted code.
 pub struct HtmlRenderer {
@@ -36,11 +36,11 @@ impl HtmlRenderer {
             theme,
         }
     }
-    
+
     /// Render lines of code to HTML.
     pub fn render(&self, lines: &[TextLineInfo]) -> String {
         let mut output = String::new();
-        
+
         output.push_str("<!DOCTYPE html>\n");
         output.push_str("<html>\n<head>\n");
         output.push_str("<meta charset=\"utf-8\">\n");
@@ -49,24 +49,25 @@ impl HtmlRenderer {
         output.push_str("</style>\n");
         output.push_str("</head>\n<body>\n");
         output.push_str("<pre><code>\n");
-        
+
         for line_info in lines {
             output.push_str(&self.render_line(line_info));
             output.push('\n');
         }
-        
+
         output.push_str("</code></pre>\n");
         output.push_str("</body>\n</html>\n");
-        
+
         output
     }
-    
+
     /// Render a single line to HTML.
     pub fn render_line(&self, line_info: &TextLineInfo) -> String {
         let mut output = String::new();
 
         for segment in &line_info.segments {
-            let text = &line_info.text_line[segment.start_index..segment.start_index + segment.length];
+            let text =
+                &line_info.text_line[segment.start_index..segment.start_index + segment.length];
 
             if let Some(token_type) = &segment.token_type {
                 let color = self.theme.get_color_or_default(token_type);
@@ -83,7 +84,7 @@ impl HtmlRenderer {
 
         output
     }
-    
+
     /// Generate CSS styles.
     fn generate_css(&self) -> String {
         format!(
@@ -99,12 +100,10 @@ impl HtmlRenderer {
     overflow-x: auto;
 }}
 "#,
-            self.class_prefix,
-            self.theme.colors.background,
-            self.theme.colors.foreground
+            self.class_prefix, self.theme.colors.background, self.theme.colors.foreground
         )
     }
-    
+
     /// Convert color string to CSS format.
     fn color_to_css(&self, color: &Color) -> String {
         // Handle named colors
@@ -128,7 +127,7 @@ impl HtmlRenderer {
             }
         }
     }
-    
+
     /// Escape HTML special characters.
     fn escape_html(&self, text: &str) -> String {
         text.replace('&', "&amp;")
@@ -172,30 +171,28 @@ impl TerminalRenderer {
 
     /// Create a new terminal renderer with color control and theme.
     pub fn with_colors_and_theme(use_colors: bool, theme: Theme) -> Self {
-        Self {
-            use_colors,
-            theme,
-        }
+        Self { use_colors, theme }
     }
-    
+
     /// Render lines of code to terminal output.
     pub fn render(&self, lines: &[TextLineInfo]) -> String {
         let mut output = String::new();
-        
+
         for line_info in lines {
             output.push_str(&self.render_line(line_info));
             output.push('\n');
         }
-        
+
         output
     }
-    
+
     /// Render a single line to terminal output.
     pub fn render_line(&self, line_info: &TextLineInfo) -> String {
         let mut output = String::new();
 
         for segment in &line_info.segments {
-            let text = &line_info.text_line[segment.start_index..segment.start_index + segment.length];
+            let text =
+                &line_info.text_line[segment.start_index..segment.start_index + segment.length];
 
             if self.use_colors {
                 if let Some(token_type) = &segment.token_type {
@@ -212,20 +209,20 @@ impl TerminalRenderer {
 
         output
     }
-    
+
     /// Convert color string to ANSI escape code.
     fn color_to_ansi(&self, color: &Color) -> String {
         // Handle named colors
         let ansi_code = match color.to_lowercase().as_str() {
-            "blue" => "34",      // Blue
-            "red" => "31",       // Red
-            "green" => "32",     // Green
+            "blue" => "34",           // Blue
+            "red" => "31",            // Red
+            "green" => "32",          // Green
             "gray" | "grey" => "90",  // Bright black (gray)
-            "darkred" => "31",   // Red (close enough)
+            "darkred" => "31",        // Red (close enough)
             "cornflowerblue" => "34", // Blue
-            "chocolate" => "33", // Yellow (close to brown)
-            "darkcyan" => "36",  // Cyan
-            "magenta" => "35",   // Magenta
+            "chocolate" => "33",      // Yellow (close to brown)
+            "darkcyan" => "36",       // Cyan
+            "magenta" => "35",        // Magenta
             _ => {
                 // Try to parse hex color
                 if color.starts_with('#') && color.len() == 7 {

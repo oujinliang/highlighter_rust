@@ -50,13 +50,20 @@ fn main() {
     let octal = 0o755;
     let float = 3.14159;
 
-    println!("Hex: {}, Binary: {}, Octal: {}, Float: {}", hex, binary, octal, float);
+    println!(
+        "Hex: {}, Binary: {}, Octal: {}, Float: {}",
+        hex, binary, octal, float
+    );
 
     // Test with raw strings
     let raw = r#"This is a "raw" string with \n literal backslashes"#;
     println!("{}", raw);
 
     // Test with format strings
-    let formatted = format!("Hello, {}! You are {} years old.", person.name(), person.age());
+    let formatted = format!(
+        "Hello, {}! You are {} years old.",
+        person.name(),
+        person.age()
+    );
     println!("{}", formatted);
 }

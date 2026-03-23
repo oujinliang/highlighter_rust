@@ -16,7 +16,7 @@ impl StringInterner {
             cache: HashMap::new(),
         }
     }
-    
+
     /// Intern a string, returning a reference-counted pointer.
     /// If the string has been interned before, returns the existing pointer.
     pub fn intern(&mut self, s: &str) -> Rc<String> {
@@ -25,12 +25,12 @@ impl StringInterner {
             .or_insert_with(|| Rc::new(s.to_string()))
             .clone()
     }
-    
+
     /// Get the number of interned strings.
     pub fn len(&self) -> usize {
         self.cache.len()
     }
-    
+
     /// Check if the interner is empty.
     pub fn is_empty(&self) -> bool {
         self.cache.is_empty()
@@ -50,21 +50,21 @@ mod tests {
     #[test]
     fn test_interner_basic() {
         let mut interner = StringInterner::new();
-        
+
         let s1 = interner.intern("hello");
         let s2 = interner.intern("hello");
         let s3 = interner.intern("world");
-        
+
         // Same string should return same reference
         assert!(Rc::ptr_eq(&s1, &s2));
-        
+
         // Different strings should return different references
         assert!(!Rc::ptr_eq(&s1, &s3));
-        
+
         // Check values
         assert_eq!(*s1, "hello");
         assert_eq!(*s3, "world");
-        
+
         // Check interner size
         assert_eq!(interner.len(), 2);
     }
